@@ -1,31 +1,48 @@
-Role Name
+Ansible role for vProtect Server
 =========
 
-A brief description of the role goes here.
+This ansible role installs Storware vProtect Server - management server that manages multiple vProtect Nodes (provided in a separate role). Find out more here: https://storware.gitbook.io/storware-vprotect
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Target host - CentOS/RHEL 7 minimal with root permissions. You also need running vProtect Server and provide variable `server_fqdn` so that nodes will be automatically registered
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- `server_fqdn` - FQDN of the host where vProtect Server is working - it is expected to communicate over port 8181
+
+Host variables:
+- `node_name` - node name, if not provided hostname will be used; nodes must have unique names
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Sample hosts inventory:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+[all:vars]
+ansible_user = root
+server_fqdn = 192.168.1.2
+
+[nodes]
+192.168.1.3 node_name=node1
+192.168.1.4 node_name=node2
+```
+
+Sample site.yml:
+
+```
+- hosts: nodes
+  roles:
+  - xe0nic.ansible_vprotect_node
+```
 
 License
 -------
@@ -34,5 +51,3 @@ BSD
 
 Author Information
 ------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
