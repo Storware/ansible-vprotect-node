@@ -13,7 +13,7 @@
   when: node_name is undefined
 
 - name: Using the following vProtect Server FQDN
-  debug: 
+  debug:
     msg: "vProtect Server FQDN: {{ server_fqdn }}, vProtect Node name: {{ node_name }}"
 
 - name: Add vProtect repository
