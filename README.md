@@ -1,7 +1,7 @@
-Ansible role for vProtect Server
+Ansible role for vProtect Node
 =========
 
-This ansible role installs Storware vProtect Server - management server that manages multiple vProtect Nodes (provided in a separate role). Find out more here: https://storware.gitbook.io/storware-vprotect
+This ansible role installs Storware vProtect Node - data mover that executes backup tasks (nodes are managed by vProtect Server, provided in a separate role). Find out more here: https://storware.gitbook.io/storware-vprotect
 
 Requirements
 ------------
