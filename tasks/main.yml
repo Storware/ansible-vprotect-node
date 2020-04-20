@@ -19,8 +19,8 @@
 - name: Add vProtect repository
   yum_repository:
     name: vProtect
-    description: Storware vProtect repo
-    baseurl: ftp://vprotect-repo.storware.eu/repo
+    description: vProtect repo
+    baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
 
 - name: Update all packages

@@ -1,4 +1,4 @@
 ---
-
+vprotect_repo: "ftp://vprotect-repo.storware.eu/repo"
 admin_user: "admin"
 admin_pass: "vPr0tect"
