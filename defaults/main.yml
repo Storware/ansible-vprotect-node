@@ -1,4 +1,4 @@
 ---
-vprotect_repo: "ftp://vprotect-repo.storware.eu/repo"
+vprotect_repo: "http://repo.storware.eu/vprotect/current/el{{ ansible_distribution_major_version }}"
 admin_user: "admin"
 admin_pass: "vPr0tect"
