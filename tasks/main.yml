@@ -16,15 +16,28 @@
   debug:
     msg: "vProtect Server FQDN: {{ server_fqdn }}, vProtect Node name: {{ node_name }}"
 
-- name: Add vProtect repository
+- name: Add vProtect yum repository
   yum_repository:
     name: vProtect
     description: vProtect repo
     baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
 
-- name: Update all packages
+- name: Add vProtect zypper repository
+  community.general.zypper_repository:
+    name: vProtect
+    description: vProtect repo
+    repo: "{{ vprotect_repo }}"
+    disable_gpg_check: yes
+
+- name: Update all yum packages
   yum:
+    name: '*'
+    state: latest
+    update_cache: yes
+    
+- name: Update all zypper packages
+  zypper:
     name: '*'
     state: latest
     update_cache: yes
