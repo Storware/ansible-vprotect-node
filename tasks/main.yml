@@ -22,26 +22,30 @@
     description: vProtect repo
     baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
-
+  when: ansible_facts['os_family'] != "Suse"
+  
 - name: Add vProtect zypper repository
   community.general.zypper_repository:
     name: vProtect
     description: vProtect repo
     repo: "{{ vprotect_repo }}"
     disable_gpg_check: yes
+  when: ansible_facts['os_family'] == "Suse"
 
 - name: Update all yum packages
   yum:
     name: '*'
     state: latest
     update_cache: yes
-    
+  when: ansible_facts['os_family'] != "Suse"
+  
 - name: Update all zypper packages
   zypper:
     name: '*'
     state: latest
     update_cache: yes
-
+  when: ansible_facts['os_family'] == "Suse"
+  
 - name: Install vProtect Node
   yum:
     name: vprotect-node
@@ -59,7 +63,7 @@
   command: vprotect-node-configure
 
 - name: SSL - import vProtect Server certificate
-  command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181'
+  command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181 {{ server_fqdn }} "changeit" {{ ansible_os_family }}'
   register: import_result
   changed_when: "'Certificate was added to keystore' in import_result.stdout"
   failed_when: "import_result.rc != 0 and 'already exists' not in import_result.stdout"
