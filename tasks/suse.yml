@@ -1,0 +1,14 @@
+---
+
+- name: Add vProtect zypper repository
+  community.general.zypper_repository:
+    name: vProtect
+    description: vProtect repo
+    repo: "{{ vprotect_sles_repo }}"
+    disable_gpg_check: yes
+  
+- name: Update all zypper packages
+  zypper:
+    name: '*'
+    state: dist-upgrade
+    update_cache: yes
