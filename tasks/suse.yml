@@ -4,7 +4,7 @@
   community.general.zypper_repository:
     name: vProtect
     description: vProtect repo
-    repo: "{{ vprotect_repo }}"
+    repo: "{{ vprotect_sles_repo }}"
     disable_gpg_check: yes
   
 - name: Update all zypper packages
