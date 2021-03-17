@@ -12,39 +12,17 @@
     node_name: "{{ ansible_hostname }}"
   when: node_name is undefined
 
+- name: Add RH repositories and update packages
+  include_tasks: rh.yml
+  when: ansible_facts['os_family'] != "Suse"
+  
+- name: Add Suse repositories and update packages
+  include_tasks: suse.yml
+  when: ansible_facts['os_family'] == "Suse"
+
 - name: Using the following vProtect Server FQDN
   debug:
     msg: "vProtect Server FQDN: {{ server_fqdn }}, vProtect Node name: {{ node_name }}"
-
-- name: Add vProtect yum repository
-  yum_repository:
-    name: vProtect
-    description: vProtect repo
-    baseurl: "{{ vprotect_repo }}"
-    gpgcheck: no
-  when: ansible_facts['os_family'] != "Suse"
-  
-- name: Add vProtect zypper repository
-  community.general.zypper_repository:
-    name: vProtect
-    description: vProtect repo
-    repo: "{{ vprotect_repo }}"
-    disable_gpg_check: yes
-  when: ansible_facts['os_family'] == "Suse"
-
-- name: Update all yum packages
-  yum:
-    name: '*'
-    state: latest
-    update_cache: yes
-  when: ansible_facts['os_family'] != "Suse"
-  
-- name: Update all zypper packages
-  zypper:
-    name: '*'
-    state: dist-upgrade
-    update_cache: yes
-  when: ansible_facts['os_family'] == "Suse"
   
 - name: Install vProtect Node
   yum:
