@@ -7,16 +7,16 @@
       - admin_user is defined
       - admin_pass is defined
 
-- name: Setting up vProtect Node name
+- name: Set the Node name variable
   set_fact:
     node_name: "{{ ansible_hostname }}"
   when: node_name is undefined
 
-- name: Using the following vProtect Server FQDN
+- name: Show the Server FQDN and Node name variables
   debug:
-    msg: "vProtect Server FQDN: {{ server_fqdn }}, vProtect Node name: {{ node_name }}"
+    msg: "Server FQDN: {{ server_fqdn }}, Node name: {{ node_name }}"
 
-- name: Add vProtect repository
+- name: Add package repository
   yum_repository:
     name: vProtect
     description: vProtect repo
@@ -29,7 +29,7 @@
     state: latest
     update_cache: yes
 
-- name: Install vProtect Node
+- name: Install the Node
   yum:
     name: vprotect-node
     state: latest
@@ -42,22 +42,22 @@
     group: vprotect
     state: directory
 
-- name: Configure vProtect Node
+- name: Configure the Node
   command: vprotect-node-configure
 
-- name: SSL - import vProtect Server certificate
+- name: SSL - import the Server certificate
   command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181'
   register: import_result
   changed_when: "'Certificate was added to keystore' in import_result.stdout"
   failed_when: "import_result.rc != 0 and 'already exists' not in import_result.stdout"
 
-- name: Register node
+- name: Register the Node
   command: "vprotect node -r {{ node_name }} {{ admin_user }} https://{{ server_fqdn }}:8181/api {{ admin_pass }}"
   register: register_result
   changed_when: "'ERROR' not in register_result.stdout"
   failed_when: "'ERROR' in register_result.stdout and 'DB_ENTITY_ALREADY_EXISTS' not in register_result.stdout"
 
-- name: Start and enable vProtect Node service
+- name: Start and enable the Node service
   service:
     name: vprotect-node
     daemon-reload: yes
