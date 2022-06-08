@@ -23,12 +23,6 @@
     baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
 
-- name: Update all packages
-  yum:
-    name: '*'
-    state: latest
-    update_cache: yes
-
 - name: Install the Node
   yum:
     name: vprotect-node
