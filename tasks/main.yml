@@ -1,5 +1,10 @@
 ---
 
+- name: Set the Server FQDN variable if possible
+  set_fact:
+    server_fqdn: "{{ hostvars['localhost']['server_fqdn'] }}"
+  when: server_fqdn is undefined and hostvars['localhost']['server_fqdn'] is defined
+
 - name: Check mandatory variables
   assert:
     that:
