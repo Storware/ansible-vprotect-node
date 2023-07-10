@@ -27,6 +27,7 @@
     description: vProtect repo
     baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
+    reposdir: "{{ package_repos_dir }}"
 
 - name: Install the Node
   yum:
