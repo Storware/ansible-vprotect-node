@@ -52,7 +52,7 @@
   failed_when: "import_result.rc != 0 and 'already exists' not in import_result.stdout"
 
 - name: Register the Node
-  command: "vprotect node -r {{ node_name }} {{ admin_user }} https://{{ server_fqdn }}:8181/api {{ admin_pass }}"
+  command: "vprotect node -r {{ node_name }} {{ admin_user }} https://{{ server_fqdn }}:8181/api {{ admin_pass | quote }}"
   register: register_result
   changed_when: "'ERROR' not in register_result.stdout"
   failed_when: "'ERROR' in register_result.stdout and 'DB_ENTITY_ALREADY_EXISTS' not in register_result.stdout"
