@@ -58,7 +58,7 @@
   failed_when: "'ERROR' in register_result.stdout and 'DB_ENTITY_ALREADY_EXISTS' not in register_result.stdout"
 
 - name: Start and enable the Node service
-  ansible.builtin.service:
+  ansible.builtin.systemd_service:
     name: vprotect-node
     daemon-reload: yes
     state: started
