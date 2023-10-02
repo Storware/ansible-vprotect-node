@@ -1,28 +1,28 @@
 ---
 
 - name: Set the Server FQDN variable if possible
-  set_fact:
+  ansible.builtin.set_fact:
     server_fqdn: "{{ hostvars['localhost']['server_fqdn'] }}"
   when: server_fqdn is undefined and hostvars['localhost']['server_fqdn'] is defined
 
 - name: Check mandatory variables
-  assert:
+  ansible.builtin.assert:
     that:
       - server_fqdn is defined
       - admin_user is defined
       - admin_pass is defined
 
 - name: Set the Node name variable
-  set_fact:
+  ansible.builtin.set_fact:
     node_name: "{{ ansible_hostname }}"
   when: node_name is undefined
 
 - name: Show the Server FQDN and Node name variables
-  debug:
+  ansible.builtin.debug:
     msg: "Server FQDN: {{ server_fqdn }}, Node name: {{ node_name }}"
 
 - name: Add package repository
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: vProtect
     description: vProtect repo
     baseurl: "{{ vprotect_repo }}"
@@ -30,35 +30,35 @@
     reposdir: "{{ package_repos_dir }}"
 
 - name: Install the Node
-  yum:
+  ansible.builtin.yum:
     name: vprotect-node
     state: latest
     update_cache: yes
 
 - name: Create staging space directory
-  file:
+  ansible.builtin.file:
     path: "/vprotect_data"
     owner: vprotect
     group: vprotect
     state: directory
 
 - name: Configure the Node
-  command: vprotect-node-configure
+  ansible.builtin.command: vprotect-node-configure
 
 - name: SSL - import the Server certificate
-  command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181'
+  ansible.builtin.command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181'
   register: import_result
   changed_when: "'Certificate was added to keystore' in import_result.stdout"
   failed_when: "import_result.rc != 0 and 'already exists' not in import_result.stdout"
 
 - name: Register the Node
-  command: "vprotect node -r {{ node_name }} {{ admin_user }} https://{{ server_fqdn }}:8181/api {{ admin_pass | quote }}"
+  ansible.builtin.command: "vprotect node -r {{ node_name }} {{ admin_user }} https://{{ server_fqdn }}:8181/api {{ admin_pass | quote }}"
   register: register_result
   changed_when: "'ERROR' not in register_result.stdout"
   failed_when: "'ERROR' in register_result.stdout and 'DB_ENTITY_ALREADY_EXISTS' not in register_result.stdout"
 
 - name: Start and enable the Node service
-  service:
+  ansible.builtin.service:
     name: vprotect-node
     daemon-reload: yes
     state: started
