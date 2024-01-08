@@ -1,4 +1,0 @@
----
-- name: Add package repository (Debian/Ubuntu)
-  apt_repository:
-    repo: "deb [trusted=yes] {{ vprotect_repo }} ./"

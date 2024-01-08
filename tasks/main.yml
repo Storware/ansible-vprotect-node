@@ -30,7 +30,10 @@
     reposdir: "{{ package_repos_dir }}"
   when: ansible_os_family == 'RedHat' or ansible_os_family == 'Suse'
 
-- include_tasks: debian.yml
+- name: Add package repository (Debian/Ubuntu)
+  apt_repository:
+    repo: "deb [trusted=yes] {{ vprotect_repo }} ./"
+  when: ansible_os_family == 'Debian'
 
 - name: Install the Node
   package:
