@@ -35,6 +35,13 @@
     repo: "deb [trusted=yes] {{ vprotect_repo }} ./"
   when: ansible_os_family == 'Debian'
 
+- name: Wait for dpkg lock to be released (Debian/Ubuntu)
+  wait_for:
+    path: /var/lib/dpkg/lock-frontend
+    state: absent
+    timeout: 600
+  when: ansible_os_family == 'Debian'
+
 - name: Install the Node
   package:
     name: vprotect-node
