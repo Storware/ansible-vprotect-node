@@ -21,19 +21,24 @@
   debug:
     msg: "Server FQDN: {{ server_fqdn }}, Node name: {{ node_name }}"
 
-- name: Add package repository
+- name: Add package repository (Red Hat/SUSE)
   yum_repository:
     name: vProtect
     description: vProtect repo
     baseurl: "{{ vprotect_repo }}"
     gpgcheck: no
     reposdir: "{{ package_repos_dir }}"
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'Suse'
+
+- name: Add package repository (Debian/Ubuntu)
+  apt_repository:
+    repo: "deb [trusted=yes] {{ vprotect_repo }} ./"
+  when: ansible_os_family == 'Debian'
 
 - name: Install the Node
-  yum:
+  package:
     name: vprotect-node
     state: latest
-    update_cache: yes
 
 - name: Create staging space directory
   file:
