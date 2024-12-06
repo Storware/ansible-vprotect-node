@@ -50,8 +50,17 @@
 - name: Configure the Node
   command: vprotect-node-configure
 
+- name: Check if new SSL certificate import script exists
+  stat:
+    path: /opt/vprotect/node/scripts/node_add_ssl_cert.sh
+  register: script_path_node
+
+- name: Set SSL certificate import script path
+  set_fact:
+    ssl_script_path: "{{ '/opt/vprotect/node/scripts/node_add_ssl_cert.sh' if script_path_node.stat.exists else '/opt/vprotect/scripts/node_add_ssl_cert.sh' }}"
+
 - name: SSL - import the Server certificate
-  command: '/opt/vprotect/scripts/node_add_ssl_cert.sh {{ server_fqdn }} 8181'
+  command: '{{ ssl_script_path }} {{ server_fqdn }} 8181'
   register: import_result
   changed_when: "'Certificate was added to keystore' in import_result.stdout"
   failed_when: "import_result.rc != 0 and 'already exists' not in import_result.stdout"
