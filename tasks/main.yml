@@ -47,8 +47,14 @@
     group: vprotect
     state: directory
 
+- name: Check if node is already configured
+  stat:
+    path: "/opt/vprotect/node/vprotect-node-configure.log"
+  register: node_configured_check
+
 - name: Configure the Node
   command: vprotect-node-configure
+  when: not node_configured_check.stat.exists
 
 - name: Check if new SSL certificate import script exists
   stat:
